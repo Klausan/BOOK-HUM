@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HUM — A Novel by Anton Hatter</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Lora:ital,wght@0,400;0,500;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-color: #0d0d0f;
+      --card-bg: #151518;
+      --text-main: #e4e4e7;
+      --text-muted: #a1a1aa;
+      --accent: #ffffff;
+      --led-on: #ff3b30;
+      --led-play: #34c759;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 100px 20px;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 20%, rgba(50, 55, 75, 0.4) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(20, 20, 25, 0.8) 0%, transparent 50%);
+    }
+
+    .container {
+      max-width: 860px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 35px;
+    }
+
+    /* Лаконичный бейдж сверху */
+    .book-badge {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 6px 16px;
+      border-radius: 20px;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    /* ПРЯМАЯ КНИГА С НАРАБОТАННОЙ ФОТО-ТЕНЬЮ */
+    .book-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .book-photo-card {
+      position: relative;
+      width: 420px;
+      max-width: 85vw;
+      border-radius: 4px;
+      overflow: visible;
+      /* Многослойная мягкая тень дает физический объем объекту, лежащему/стоящему прямо */
+      box-shadow: 
+        /* Тень от толщины переплета слева */
+        -8px 0 15px -3px rgba(0, 0, 0, 0.6),
+        /* Тень толщины страниц справа */
+        6px 0 12px -3px rgba(0, 0, 0, 0.4),
+        /* Глубокая падающая тень снизу */
+        0 25px 45px rgba(0, 0, 0, 0.85),
+        /* Внешний объемный ореол */
+        0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Фотография обложки */
+    .book-cover {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 2px 4px 4px 2px;
+    }
+
+    /* Эффект корешка и сгиба переплета на самой обложке */
+    .book-photo-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      border-radius: 2px 4px 4px 2px;
+      background: 
+        /* Вертикальный блик и тень корешка слева */
+        linear-gradient(
+          90deg, 
+          rgba(0, 0, 0, 0.35) 0%, 
+          rgba(255, 255, 255, 0.15) 1.5%, 
+          rgba(0, 0, 0, 0.2) 3%, 
+          rgba(0, 0, 0, 0) 6%
+        ),
+        /* Тонкий эффект объема обреза страниц справа */
+        linear-gradient(
+          270deg,
+          rgba(0,0,0,0.2) 0%,
+          transparent 1%
+        );
+    }
+
+    /* Характеристики книги */
+    .book-meta-pills {
+      display: flex;
+      gap: 12px;
+      margin-top: 35px;
+      font-size: 11px;
+      color: #888;
+      font-family: 'Syne', sans-serif;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .book-meta-pills span {
+      background: rgba(255, 255, 255, 0.04);
+      padding: 6px 14px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* Кнопки покупки */
+    .buy-actions {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: #ffffff;
+      color: #000000;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 14px 32px;
+      border-radius: 30px;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      background: #e4e4e7;
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #ffffff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 14px 28px;
+      border-radius: 30px;
+      text-decoration: none;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
+
+    /* Заголовок к аудио-кассете */
+    .audio-section-title {
+      text-align: center;
+      margin-top: 25px;
+      margin-bottom: -20px;
+    }
+
+    .audio-section-title h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #666;
+    }
+
+    /* Компактный ретро-магнитофон */
+    .recorder-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: linear-gradient(145deg, #1f1f23 0%, #121215 100%);
+      padding: 18px;
+      border-radius: 16px;
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.8),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+      position: relative;
+    }
+
+    .deck-top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 6px 10px 6px;
+    }
+
+    .brand-mark {
+      font-family: 'Syne', sans-serif;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: #555;
+      text-transform: uppercase;
+    }
+
+    .led-indicators {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .led-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 8px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .led {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #222;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .led.active-rec { background-color: var(--led-on); box-shadow: 0 0 6px var(--led-on); }
+    .led.active-play { background-color: var(--led-play); box-shadow: 0 0 6px var(--led-play); }
+
+    /* Кассета */
+    .cassette {
+      width: 280px;
+      max-width: 75vw;
+      height: 180px;
+      background: rgba(22, 22, 26, 0.95);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      padding: 10px;
+      overflow: hidden;
+      box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+    }
+
+    .screw {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: #111;
+      border-radius: 50%;
+      border: 1px solid #333;
+    }
+    .screw-tl { top: 6px; left: 6px; }
+    .screw-tr { top: 6px; right: 6px; }
+    .screw-bl { bottom: 6px; left: 6px; }
+    .screw-br { bottom: 6px; right: 6px; }
+
+    .label-strip {
+      background: #f4eedd;
+      width: 86%;
+      height: 30px;
+      margin: 6px auto 0 auto;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.1);
+    }
+
+    .handwritten-text {
+      font-family: 'Caveat', cursive, sans-serif;
+      color: #1a365d;
+      font-size: 21px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      line-height: 1;
+      transform: rotate(-1.2deg);
+      opacity: 0.92;
+    }
+
+    .cassette-body {
+      position: relative;
+      height: 85px;
+      margin-top: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .side-a {
+      position: absolute;
+      left: 14px;
+      top: 15px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid #00875a;
+      color: #00875a;
+      font-weight: bold;
+      font-size: 9px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .ur90-text {
+      position: absolute;
+      top: 4px;
+      color: #00875a;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .tape-roll {
+      position: absolute;
+      width: 70px;
+      height: 70px;
+      background: #2a180f;
+      border-radius: 50%;
+      left: 45px;
+      top: 4px;
+    }
+
+    .spool-container {
+      position: absolute;
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      padding: 0 35px;
+      z-index: 2;
+    }
+
+    .spool {
+      width: 36px;
+      height: 36px;
+      background: #ffffff;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .spool-inner {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px dashed #222;
+    }
+
+    .spin {
+      animation: rotate-spool 2s linear infinite;
+    }
+
+    @keyframes rotate-spool {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .maxell-logo-center {
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #ffffff;
+      font-family: Arial, sans-serif;
+      font-weight: 900;
+      font-size: 15px;
+      letter-spacing: -1px;
+      opacity: 0.85;
+    }
+
+    .cassette-bottom-trap {
+      position: absolute;
+      bottom: 0;
+      left: 15%;
+      width: 70%;
+      height: 32px;
+      background: rgba(10, 10, 12, 0.7);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      clip-path: polygon(5% 0%, 95% 0%, 100% 100%, 0% 100%);
+    }
+
+    /* Клавиши магнитофона */
+    .tape-deck-panel {
+      width: 280px;
+      max-width: 75vw;
+      background: linear-gradient(180deg, #2a2a30 0%, #1c1c20 100%);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px 8px 12px 8px;
+      margin-top: 10px;
+    }
+
+    .labels-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      text-align: center;
+      font-size: 7px;
+      font-weight: 800;
+      font-family: 'Syne', Arial, sans-serif;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .buttons-row {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+    }
+
+    .mech-btn {
+      height: 36px;
+      background: linear-gradient(180deg, #44444c 0%, #28282e 100%);
+      border: 1px solid #1a1a1d;
+      border-radius: 3px;
+      box-shadow: 0 3px 0 #111113, inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.1s ease;
+    }
+
+    .mech-btn::after {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #222226 0%, #3a3a42 100%);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .mech-btn.record-btn::after {
+      background: radial-gradient(circle, #e63946 40%, #9b2226 100%);
+    }
+
+    .mech-btn:active, .mech-btn.pressed {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #111113, inset 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    /* Аннотация романа */
+    .synopsis {
+      max-width: 620px;
+      font-family: 'Lora', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.8;
+      color: var(--text-main);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 40px;
+      margin-top: 10px;
+    }
+
+    .synopsis h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 18px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .synopsis p {
+      margin-bottom: 22px;
+      opacity: 0.9;
+    }
+
+    .synopsis p:first-of-type::first-letter {
+      font-size: 48px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      float: left;
+      line-height: 1;
+      margin-right: 12px;
+      color: #fff;
+    }
+
+    .synopsis strong {
+      color: #fff;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Бейдж над книгой -->
+    <div class="book-badge">A New Novel</div>
+
+    <!-- ПРЯМАЯ КНИГА -->
+    <div class="book-wrapper">
+      <div class="book-photo-card">
+        <img class="book-cover" src="19FD8CBC-8D43-440A-975A-01247E1F9964.jpg" alt="HUM Book Cover">
+      </div>
+      
+      <div class="book-meta-pills">
+        <span>Hardcover</span>
+        <span>E-Book</span>
+        <span>Audiobook</span>
+      </div>
+
+      <div class="buy-actions">
+        <a href="#order" class="btn-primary">Order Book</a>
+        <a href="#synopsis" class="btn-secondary">Read Synopsis</a>
+      </div>
+    </div>
+
+    <!-- Заголовок к кассете -->
+    <div class="audio-section-title">
+      <h3>Listen to the Demo Cassette (Story Artifact)</h3>
+    </div>
+
+    <!-- Интерактивный кассетник -->
+    <div class="recorder-unit" id="recorderUnit">
+      <div class="deck-top-bar">
+        <span class="brand-mark">HIGH DENSITY SYSTEM</span>
+        <div class="led-indicators">
+          <div class="led-group"><div class="led" id="recLed"></div> REC</div>
+          <div class="led-group"><div class="led" id="playLed"></div> PLAY</div>
+        </div>
+      </div>
+
+      <div class="cassette">
+        <div class="screw screw-tl"></div>
+        <div class="screw screw-tr"></div>
+        <div class="screw screw-bl"></div>
+        <div class="screw screw-br"></div>
+
+        <div class="label-strip">
+          <span class="handwritten-text">Demo BIG MAGE</span>
+        </div>
+
+        <div class="cassette-body">
+          <div class="side-a">A</div>
+          <div class="ur90-text">UR 90</div>
+          <div class="tape-roll"></div>
+
+          <div class="spool-container">
+            <div class="spool" id="spool1"><div class="spool-inner"></div></div>
+            <div class="spool" id="spool2"><div class="spool-inner"></div></div>
+          </div>
+
+          <div class="maxell-logo-center">maxell</div>
+        </div>
+
+        <div class="cassette-bottom-trap"></div>
+      </div>
+
+      <div class="tape-deck-panel">
+        <div class="labels-row">
+          <span>REC</span>
+          <span>REW</span>
+          <span>PLAY</span>
+          <span>FF</span>
+          <span>STOP</span>
+          <span>EJECT</span>
+        </div>
+        <div class="buttons-row">
+          <button class="mech-btn record-btn" onclick="pressKey(this, 'rec')"></button>
+          <button class="mech-btn" onclick="pressKey(this, 'rew')"></button>
+          <button class="mech-btn" onclick="pressKey(this, 'play')"></button>
+          <button class="mech-btn" onclick="pressKey(this, 'ff')"></button>
+          <button class="mech-btn" onclick="pressKey(this, 'stop')"></button>
+          <button class="mech-btn" onclick="pressKey(this, 'eject')"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Аннотация -->
+    <article class="synopsis" id="synopsis">
+      <h2>About the Book</h2>
+      <p>A regular California town where the weather is always a little too perfect and everybody’s living their best life. Or doing a good job of pretending. Almost every house here has a pool. Like they sell you a small piece of California sky along with the mortgage.</p>
+      <p>Santa Sirena, California. Twenty minutes from the offices where the future gets made.</p>
+      <p>Miles Keller is sixteen. If he stopped showing up to school for a week, two people would notice: the front office, so they could call his parents, and Bob. Paige stands outside Building Two every morning, and he has been planning to walk up to her for three years. Nights, he and Bob play in the garage. They put their first song online and got five views. Three of them their own.</p>
+      <p>Miles is good with code. He spends the whole summer working out why the brain asks for one song again and deletes another like a mistake. He writes a program called <strong>HUM</strong>.</p>
+      <p>A month later the whole school gym is singing the BIG MAGE chorus. Paige learns his name before the rest of the country does. A year later there’s a label deal and a national tour. People sing every word and can’t remember the first time they heard it.</p>
+      <p>Bob said it sounded like cheating. All Miles heard was that it worked.</p>
+    </article>
+
+  </div>
+
+  <script>
+    const spool1 = document.getElementById('spool1');
+    const spool2 = document.getElementById('spool2');
+    const recLed = document.getElementById('recLed');
+    const playLed = document.getElementById('playLed');
+
+    function pressKey(btn, action) {
+      document.querySelectorAll('.mech-btn').forEach(b => b.classList.remove('pressed'));
+      recLed.classList.remove('active-rec');
+      playLed.classList.remove('active-play');
+
+      if (action === 'stop' || action === 'eject') {
+        spool1.classList.remove('spin');
+        spool2.classList.remove('spin');
+        return;
+      }
+
+      btn.classList.add('pressed');
+
+      if (action === 'rec') recLed.classList.add('active-rec');
+
+      if (action === 'play' || action === 'rew' || action === 'ff' || action === 'rec') {
+        playLed.classList.add('active-play');
+        spool1.classList.add('spin');
+        spool2.classList.add('spin');
+
+        if (action === 'ff' || action === 'rew') {
+          spool1.style.animationDuration = '0.35s';
+          spool2.style.animationDuration = '0.35s';
+        } else {
+          spool1.style.animationDuration = '1.8s';
+          spool2.style.animationDuration = '1.8s';
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
