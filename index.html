@@ -570,7 +570,7 @@
         <div class="screw screw-br"></div>
 
         <div class="label-strip">
-          <span class="handwritten-text">Demo BIG MAGE</span>
+      <span class="handwritten-text" id="track-title">Invisible Suit</span>
         </div>
 
         <div class="cassette-body">
@@ -623,41 +623,106 @@
   </div>
 
   <script>
-    const spool1 = document.getElementById('spool1');
-    const spool2 = document.getElementById('spool2');
-    const recLed = document.getElementById('recLed');
-    const playLed = document.getElementById('playLed');
+  const spool1 = document.getElementById('spool1');
+  const spool2 = document.getElementById('spool2');
+  const recLed = document.getElementById('recLed');
+  const playLed = document.getElementById('playLed');
 
-    function pressKey(btn, action) {
-      document.querySelectorAll('.mech-btn').forEach(b => b.classList.remove('pressed'));
-      recLed.classList.remove('active-rec');
-      playLed.classList.remove('active-play');
+  // Создаем аудио-элемент
+  const audio = new Audio();
 
-      if (action === 'stop' || action === 'eject') {
-        spool1.classList.remove('spin');
-        spool2.classList.remove('spin');
-        return;
+  // Список 9 чистых файлов
+  const playlist = [
+    "Invisible Suit.mp3",
+    "Never Mine.mp3",
+    "Sand Across the Seat.mp3",
+    "Second Ahead.mp3",
+    "The Light Was You.mp3",
+    "Three Birds.mp3",
+    "Zero Views.mp3",
+    "Little Princess.mp3",
+    "Boba Tea.mp3"
+  ];
+
+  // Названия песен для наклейки
+  const trackTitles = [
+    "Invisible Suit",
+    "Never Mine",
+    "Sand Across the Seat",
+    "Second Ahead",
+    "The Light Was You",
+    "Three Birds",
+    "Zero Views",
+    "Little Princess",
+    "Boba Tea"
+  ];
+
+  let currentTrackIndex = 0;
+  const titleDisplay = document.getElementById('track-title');
+
+  function loadTrack(index) {
+    audio.src = encodeURIComponent(playlist[index]);
+    if (titleDisplay) {
+      titleDisplay.textContent = trackTitles[index];
+    }
+  }
+
+  // Загружаем первый трек
+  loadTrack(currentTrackIndex);
+
+  function pressKey(btn, action) {
+    document.querySelectorAll('.mech-btn').forEach(b => b.classList.remove('pressed'));
+    recLed.classList.remove('active-rec');
+    playLed.classList.remove('active-play');
+
+    if (action === 'stop' || action === 'eject') {
+      spool1.classList.remove('spin');
+      spool2.classList.remove('spin');
+      audio.pause();
+      if (action === 'stop') {
+        audio.currentTime = 0;
       }
+      return;
+    }
 
-      btn.classList.add('pressed');
+    btn.classList.add('pressed');
 
-      if (action === 'rec') recLed.classList.add('active-rec');
+    if (action === 'rec') recLed.classList.add('active-rec');
 
-      if (action === 'play' || action === 'rew' || action === 'ff' || action === 'rec') {
-        playLed.classList.add('active-play');
-        spool1.classList.add('spin');
-        spool2.classList.add('spin');
+    if (action === 'play' || action === 'rew' || action === 'ff') {
+      playLed.classList.add('active-play');
+      spool1.classList.add('spin');
+      spool2.classList.add('spin');
 
-        if (action === 'ff' || action === 'rew') {
-          spool1.style.animationDuration = '0.35s';
-          spool2.style.animationDuration = '0.35s';
-        } else {
-          spool1.style.animationDuration = '1.8s';
-          spool2.style.animationDuration = '1.8s';
-        }
+      if (action === 'play') {
+        audio.play();
+      } else if (action === 'ff') {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        loadTrack(currentTrackIndex);
+        audio.play();
+      } else if (action === 'rew') {
+        currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+        loadTrack(currentTrackIndex);
+        audio.play();
       }
     }
-  </script>
+
+    if (action === 'ff' || action === 'rew') {
+      spool1.style.animationDuration = '0.35s';
+      spool2.style.animationDuration = '0.35s';
+    } else {
+      spool1.style.animationDuration = '1.8s';
+      spool2.style.animationDuration = '1.8s';
+    }
+  }
+
+  // Автоматический переход к следующему треку
+  audio.addEventListener('ended', () => {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    loadTrack(currentTrackIndex);
+    audio.play();
+  });
+</script>
 
 </body>
 </html>
