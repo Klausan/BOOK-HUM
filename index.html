@@ -690,20 +690,20 @@
     if (action === 'rec') recLed.classList.add('active-rec');
 
     if (action === 'play' || action === 'rew' || action === 'ff') {
-      playLed.classList.add('active-play');
       spool1.classList.add('spin');
       spool2.classList.add('spin');
 
       if (action === 'play') {
+        playLed.classList.add('active-play');
         audio.play();
       } else if (action === 'ff') {
+        audio.pause();
         currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
         loadTrack(currentTrackIndex);
-        audio.play();
       } else if (action === 'rew') {
+        audio.pause();
         currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
         loadTrack(currentTrackIndex);
-        audio.play();
       }
     }
 
@@ -715,7 +715,6 @@
       spool2.style.animationDuration = '1.8s';
     }
   }
-
   // Автоматический переход к следующему треку
   audio.addEventListener('ended', () => {
     currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
